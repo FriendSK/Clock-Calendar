@@ -1,0 +1,9 @@
+body {
+    margin-top: 300px;
+    text-align: center;
+}
+clock-calendar {
+    font-size: 100px;
+    font-weight: 250;
+    line-height: 50px;
+}
