@@ -2,12 +2,11 @@ class ClockCalendar extends HTMLElement {
     constructor() {
         super();
         this.isShow = true;
-        this.isShortFormat = true;
+        this.isFullFormat = true;
         this.isEuDate = true;
         this.isClock = true;
 
         this.addEventListener('click', this.leftClickFunc);
-        this.addEventListener('contextmenu', event => event.preventDefault());
         this.addEventListener('contextmenu', this.rightClickFunc);
         this.addEventListener('mouseover', this.changeColor);
         this.addEventListener('mouseout', this.changeColorBack);
@@ -18,59 +17,79 @@ class ClockCalendar extends HTMLElement {
     }
 
     switchClock() {
-        this.isShortFormat = !this.isShortFormat;
+        this.isFullFormat = !this.isFullFormat;
     }
 
     switchCalendar() {
         this.isEuDate = !this.isEuDate;
     }
 
-    displayTime() {
-        let display = '';
-        let date = new Date();
-        let hours = date.getHours().toString();
-        let minutes = date.getMinutes().toString();
-        let seconds = date.getSeconds().toString();
+    getShortTime() {
+        let shortTime;
+        let options = { hour: 'numeric', minute: 'numeric' };
+        return shortTime = new Intl.DateTimeFormat('ua-UA', options).format();
+    }
 
-        hours = hours.length < 2 ? '0' + hours : hours;
-        minutes = minutes.length < 2 ? '0' + minutes : minutes;
-        seconds = seconds.length < 2 ? '0' + seconds : seconds;
+    getfullTime() {
+        let fullTime;
+        let options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        return fullTime = new Intl.DateTimeFormat('ua-UA', options).format();
+    }
 
-        return display = this.isShortFormat ? `${hours}:${minutes}` : `${hours}:${minutes}:${seconds}`
+    getUaDate() {
+        let uaDate;
+        return uaDate = new Intl.DateTimeFormat().format();
+    }
+
+    getEuDate() {
+        let euDate;
+        let options = { day: '2-digit', month: '2-digit', year: '2-digit' };
+        return euDate = new Intl.DateTimeFormat('en-US', options).format();
+    }
+
+    displayClock() {
+        if (this.isFullFormat) {
+            this.innerHTML = this.getfullTime();
+            clearInterval(this.timerId);
+            this.timerId = setInterval(() => {
+                this.innerHTML = this.getfullTime();
+            }, 1000);
+        } else {
+            this.innerHTML = this.getShortTime();
+            clearInterval(this.timerId);
+            this.timerId = setInterval(() => {
+                this.innerHTML = this.getShortTime();
+            }, 1000);
+        }
     }
 
     displayCalendar() {
-        let display = '';
-        let date = new Date();
-        let year = date.getFullYear().toString();
-        let month = date.getMonth().toString();
-        let day = date.getDate().toString();
+        if (this.isEuDate) {
+            this.innerHTML = this.getUaDate();
+            clearInterval(this.timerId);
+            this.timerId = setInterval(() => {
+                this.innerHTML = this.getUaDate();
+            }, 3600000);
+        } else {
+            this.innerHTML = this.getEuDate();
+            clearInterval(this.timerId);
+            this.timerId = setInterval(() => {
+                this.innerHTML = this.getEuDate();
+            }, 3600000);
+        }
+    }
 
-        month = month.length < 2 ? '0' + month : month;
-        day = day.length < 2 ? '0' + day : day;
-
-        return display = this.isEuDate ? `${month}/${day}/${year.substr(2)}` : `${day}.${month}.${year}`
+    getStarted() {
+        if (this.isClock) {
+            this.displayClock();
+        } else {
+            this.displayCalendar();
+        }
     }
 
     connectedCallback() {
         this.getStarted();
     }
-
-    getStarted() {
-        if (this.isClock) {
-            this.displayTime();
-            clearInterval(this.timerId);
-            this.timerId = setInterval(() => {
-                this.innerHTML = this.displayTime();
-            }, 1000);
-        } else {
-            clearInterval(this.timerId);
-            this.timerId = setInterval(() => {
-            this.innerHTML = this.displayCalendar();
-        }, 1000);
-        }
-    }
-
 
     leftClickFunc() {
         if (this.isClock) {
@@ -83,6 +102,7 @@ class ClockCalendar extends HTMLElement {
     }
 
     rightClickFunc() {
+        event.preventDefault()
         this.switchDisplayMode();
         this.getStarted();
     }
