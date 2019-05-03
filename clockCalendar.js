@@ -108,7 +108,8 @@ class ClockCalendar extends HTMLElement {
     }
 
     changeColor() {
-        this.style.color = '#ff0000';
+        let color = Math.random().toString().substr(-6);
+        this.style.color = `#${color}`;
     }
 
     changeColorBack() {
