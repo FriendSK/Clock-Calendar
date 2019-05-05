@@ -1,6 +1,11 @@
 class ClockCalendar extends HTMLElement {
     constructor() {
         super();
+        const shadow = this.attachShadow({ mode: 'open' });
+        const template = document.querySelector('template');
+        const content = document.importNode(template.content, true);
+        shadow.appendChild(content);
+        
         this.isShow = true;
         this.isFullFormat = true;
         this.isEuDate = true;
@@ -113,7 +118,7 @@ class ClockCalendar extends HTMLElement {
     }
 
     changeColorBack() {
-        this.style.color = '#000000';
+        this.style.color = 'k#000000';
     }
 };
 

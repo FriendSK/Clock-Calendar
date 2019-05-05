@@ -10,9 +10,18 @@
 </head>
 
 <body>
-    <div id='clock'>
-     <clock-calendar />
-    </div>
+    <template>
+        <style>
+            slot {
+                font-size: 100px;
+                font-weight: 400;
+                line-height: 50px;
+            }
+        </style>
+        <slot></slot>
+    </template>
+    <clock-calendar />
+
     <script type="text/javascript" src="clockCalendar.js"></script>
 </body>
 
