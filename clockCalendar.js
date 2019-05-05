@@ -118,7 +118,7 @@ class ClockCalendar extends HTMLElement {
     }
 
     changeColorBack() {
-        this.style.color = 'k#000000';
+        this.style.color = '#040505';
     }
 };
 
